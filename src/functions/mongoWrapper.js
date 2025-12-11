@@ -17,7 +17,9 @@ const kvSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Create a unique compound index for collection + key
+// Create a unique index on key field within each collection
+// Note: Each model uses a separate MongoDB collection, so the unique constraint
+// is scoped per collection, not across all collections
 kvSchema.index({ key: 1 }, { unique: true });
 
 // Store models by collection name
