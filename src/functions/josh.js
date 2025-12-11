@@ -1,14 +1,8 @@
+/**
+ * MongoDB wrapper with JoshDB-compatible API
+ * Migrated from @joshdb to MongoDB for better scalability
+ */
 
-import JOSH from '@joshdb/core';
-// @ts-expect-error no declaration file for the imported module
-import provider from '@joshdb/json';
-export const josh = (name) => {
-    return new JOSH({
-        name,
-        provider,
-        providerOptions: {
-            dataDir: `./database-storage/${name}`,
-        },
-    });
-};
+export { josh } from './mongoWrapper.js';
+
 /**@codeStyle - https://google.github.io/styleguide/tsguide.html */
