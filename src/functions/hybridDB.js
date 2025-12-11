@@ -14,6 +14,7 @@ class HybridDB {
         this.syncEnabled = false;
         this.syncQueue = [];
         this.isSyncing = false;
+        this.maxQueueSize = 10000; // Prevent memory issues during MongoDB outages
     }
 
     /**
@@ -67,7 +68,7 @@ class HybridDB {
             
             await Promise.all(operations);
         } catch (error) {
-            // Silent fail - don't block operations
+            console.error(`[HybridDB] Sync failed for ${this.name}:`, error.message);
         } finally {
             this.isSyncing = false;
         }
@@ -78,6 +79,13 @@ class HybridDB {
      */
     _queueSync(type, key, value = null) {
         if (!this.syncEnabled) return;
+        
+        // Prevent memory issues: limit queue size
+        if (this.syncQueue.length >= this.maxQueueSize) {
+            console.warn(`[HybridDB] Sync queue full for ${this.name}, dropping oldest operations`);
+            this.syncQueue.shift(); // Remove oldest operation
+        }
+        
         this.syncQueue.push({ type, key, value, timestamp: Date.now() });
     }
 
@@ -277,5 +285,3 @@ export const hybridDB = (name) => {
     
     return new HybridDB(name, joshInstance);
 };
-
-/**@codeStyle - https://google.github.io/styleguide/tsguide.html */
