@@ -4,7 +4,8 @@ import { Manager } from "./manager.js";
 import { fileURLToPath } from "node:url";
 import { emoji } from "../assets/emoji.js";
 import format from "moment-duration-format";
-import { josh } from "../functions/josh.js";
+import { hybridDB } from "../functions/hybridDB.js";
+import { connectMongoDB } from "../functions/mongodb.js";
 import { log } from "../logger.js";
 import { dirname, resolve } from "node:path";
 import { ExtendedEmbedBuilder } from "./embed.js";
@@ -59,31 +60,31 @@ export class ExtendedClient extends Client {
     this.admins = config.admins;
 
 this.db = {
-  noPrefix: josh("noPrefix"),
-  ticket: josh("ticket"),
-  botmods: josh("botmods"),
-  giveaway: josh("giveaway"),
-  mc: josh("msgCount"),
-  botstaff: josh("botstaff"), // Bot premium users
-  redeemCode: josh("redeemCode"),
-  serverstaff: josh("serverstaff"), // Server premium 
-  ignore: josh("ignore"),
-  bypass: josh("bypass"),
-  blacklist: josh("blacklist"),
-  config: josh("config"), // Bot configuration (webhooks, etc.)
-  prefix: josh("prefix"), // Guild-specific prefixes
-  afk: josh("afk"), // AFK status
-  spotify: josh("spotify"), // Spotify user data
-  likedSongs: josh("likedSongs"), // User liked songs
+  noPrefix: hybridDB("noPrefix"),
+  ticket: hybridDB("ticket"),
+  botmods: hybridDB("botmods"),
+  giveaway: hybridDB("giveaway"),
+  mc: hybridDB("msgCount"),
+  botstaff: hybridDB("botstaff"), // Bot premium users
+  redeemCode: hybridDB("redeemCode"),
+  serverstaff: hybridDB("serverstaff"), // Server premium 
+  ignore: hybridDB("ignore"),
+  bypass: hybridDB("bypass"),
+  blacklist: hybridDB("blacklist"),
+  config: hybridDB("config"), // Bot configuration (webhooks, etc.)
+  prefix: hybridDB("prefix"), // Guild-specific prefixes
+  afk: hybridDB("afk"), // AFK status
+  spotify: hybridDB("spotify"), // Spotify user data
+  likedSongs: hybridDB("likedSongs"), // User liked songs
   
   stats: {
-    songsPlayed: josh("stats/songsPlayed"),  
-    commandsUsed: josh("stats/commandsUsed"),    
-    friends: josh("stats/friends"), // Friends list  
-    linkfireStreaks: josh("stats/linkfireStreaks"), // Stores streak count for each user   
-    lastLinkfire: josh("stats/lastLinkfire"), // Tracks the last Linkfire timestamp   
+    songsPlayed: hybridDB("stats/songsPlayed"),  
+    commandsUsed: hybridDB("stats/commandsUsed"),    
+    friends: hybridDB("stats/friends"), // Friends list  
+    linkfireStreaks: hybridDB("stats/linkfireStreaks"), // Stores streak count for each user   
+    lastLinkfire: hybridDB("stats/lastLinkfire"), // Tracks the last Linkfire timestamp   
   },  
-  twoFourSeven: josh("twoFourSeven"),
+  twoFourSeven: hybridDB("twoFourSeven"),
 };
 
     this.dokdo = null;
@@ -116,7 +117,41 @@ this.db = {
     this.categories = readdirSync(resolve(__dirname, "../commands"));
     this.cooldowns = new Collection();
 
-    this.connectToGateway = () => (this.login(config.token), this);
+    this.connectToGateway = async () => {
+      // Initialize MongoDB connection asynchronously (non-blocking)
+      if (config.mongoUri) {
+        connectMongoDB(config.mongoUri); // Fire and forget
+        this.log('MongoDB connection initiated (background process)', 'info');
+        
+        // Enable sync after a short delay to allow connection
+        setTimeout(() => {
+          // Enable sync for all databases
+          Object.keys(this.db).forEach(key => {
+            if (key === 'stats') {
+              Object.values(this.db.stats).forEach(db => db.enableSync());
+            } else {
+              this.db[key].enableSync();
+            }
+          });
+          
+          // Sync from MongoDB to local in background
+          this.log('Syncing data from MongoDB to local storage (background)...', 'info');
+          Promise.all([
+            ...Object.keys(this.db).filter(k => k !== 'stats').map(key => this.db[key].syncFromMongoDB()),
+            ...Object.values(this.db.stats).map(db => db.syncFromMongoDB())
+          ]).then(() => {
+            this.log('Background MongoDB sync complete', 'success');
+          }).catch(err => {
+            this.log('MongoDB sync failed (continuing with local data): ' + err.message, 'warn');
+          });
+        }, 2000); // Wait 2 seconds for MongoDB to connect
+      } else {
+        this.log('No MongoDB URI provided. Running in local-only mode (ultra-fast).', 'info');
+      }
+      
+      await this.login(config.token);
+      return this;
+    };
 
     this.log = (message, type) => void log(message, type);
     this.sleep = async (s) => void (await new Promise((resolve) => setTimeout(resolve, s * 1000)));

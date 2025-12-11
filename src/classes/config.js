@@ -11,6 +11,7 @@ export const config = {
   links: {
       support: process.env.SUPPORT_SERVER || "https://discord.gg/p6nXDJMeyc"
   },
-  backup: process.env.BACKUP_CHANNEL || "1347901024026759278"
+  backup: process.env.BACKUP_CHANNEL || "1347901024026759278",
+  mongoUri: process.env.MONGODB_URI || process.env.MONGO_URI
   // Webhooks are dynamically created and stored in database
 };

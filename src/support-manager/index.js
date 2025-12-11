@@ -10,7 +10,8 @@
 
 import { config as loadEnv } from 'dotenv';
 import { Client, GatewayIntentBits, Collection, Partials, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import { josh } from '../functions/josh.js';
+import { hybridDB } from '../functions/hybridDB.js';
+import { connectMongoDB } from '../functions/mongodb.js';
 import { log } from '../logger.js';
 import { readdirSync } from 'fs';
 import { dirname, resolve } from 'path';
@@ -45,17 +46,18 @@ class SupportManager extends Client {
 
         // Shared database with main bot
         this.db = {
-            noPrefix: josh('noPrefix'),
-            botstaff: josh('botstaff'),
-            serverstaff: josh('serverstaff'),
-            redeemCode: josh('redeemCode'),
-            blacklist: josh('blacklist'),
-            giveaways: josh('support/giveaways'),
-            tickets: josh('support/tickets'),
-            ticketConfig: josh('support/ticketConfig'),
-            ticketTranscripts: josh('support/ticketTranscripts'),
-            warnings: josh('support/warnings'),
-            logs: josh('support/logs'),
+            noPrefix: hybridDB('noPrefix'),
+            botstaff: hybridDB('botstaff'),
+            serverstaff: hybridDB('serverstaff'),
+            redeemCode: hybridDB('redeemCode'),
+            blacklist: hybridDB('blacklist'),
+            twoFourSeven: hybridDB('twoFourSeven'),
+            giveaways: hybridDB('support/giveaways'),
+            tickets: hybridDB('support/tickets'),
+            ticketConfig: hybridDB('support/ticketConfig'),
+            ticketTranscripts: hybridDB('support/ticketTranscripts'),
+            warnings: hybridDB('support/warnings'),
+            logs: hybridDB('support/logs'),
         };
 
         this.commands = new Collection();
@@ -126,6 +128,29 @@ class SupportManager extends Client {
     async start() {
         await this.loadCommands();
         await this.loadEvents();
+        
+        // Initialize MongoDB connection asynchronously (non-blocking)
+        const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+        if (mongoUri) {
+            connectMongoDB(mongoUri); // Fire and forget
+            log('[Support Manager] MongoDB connection initiated (background process)', 'info');
+            
+            // Enable sync after a short delay to allow connection
+            setTimeout(() => {
+                // Enable sync for all databases
+                Object.values(this.db).forEach(db => db.enableSync());
+                
+                // Sync from MongoDB to local in background
+                log('[Support Manager] Syncing data from MongoDB to local storage (background)...', 'info');
+                Promise.all(Object.values(this.db).map(db => db.syncFromMongoDB())).then(() => {
+                    log('[Support Manager] Background MongoDB sync complete', 'success');
+                }).catch(err => {
+                    log('[Support Manager] MongoDB sync failed (continuing with local data): ' + err.message, 'warn');
+                });
+            }, 2000); // Wait 2 seconds for MongoDB to connect
+        } else {
+            log('[Support Manager] No MongoDB URI provided. Running in local-only mode (ultra-fast).', 'info');
+        }
         
         await this.login(process.env.SUPPORT_BOT_TOKEN);
         log('[Support Manager] Bot started successfully!', 'info');

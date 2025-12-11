@@ -4,7 +4,6 @@
  */
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import { josh } from '../../functions/josh.js';
 
 export default {
     name: 'list247',
@@ -14,8 +13,8 @@ export default {
     cooldown: 5,
 
     async execute(client, message, args) {
-        // Access the main bot's 24/7 database
-        const twoFourSevenDb = josh('twoFourSeven');
+        // Access the main bot's 24/7 database through client.db
+        const twoFourSevenDb = client.db.twoFourSeven;
         
         try {
             const keys = await twoFourSevenDb.keys;

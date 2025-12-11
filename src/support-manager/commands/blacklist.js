@@ -4,7 +4,6 @@
  */
 
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import { josh } from '../../functions/josh.js';
 
 export default {
     name: 'blacklist',
@@ -15,7 +14,7 @@ export default {
 
     async execute(client, message, args) {
         const action = args[0]?.toLowerCase();
-        const blacklistDb = josh('blacklist');
+        const blacklistDb = client.db.blacklist;
 
         if (!action || !['add', 'remove', 'list', 'check'].includes(action)) {
             const embed = client.embed(client.colors.info)

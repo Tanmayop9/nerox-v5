@@ -13,6 +13,5 @@ function runScript(path) {
 }
 
 // Start both scripts
- runScript("./src/index.js");
- runScript("./src/support-manager/index.js");
-runScript("./src/dashboard/index.js");
+runScript("./src/index.js");
+runScript("./src/support-manager/index.js");
