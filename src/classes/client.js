@@ -11,7 +11,7 @@ import { ExtendedEmbedBuilder } from "./embed.js";
 import { ExtendedButtonBuilder } from "./button.js";
 import { OAuth2Scopes } from "discord-api-types/v10";
 import { readyEvent } from "../functions/readyEvent.js";
-import { translate, getDefaultLanguage } from "../functions/i18n.js";
+import { translate } from "../functions/i18n.js";
 import { Client, Partials, Collection, GatewayIntentBits, WebhookClient } from "discord.js";
 import { ClusterClient, getInfo } from "discord-hybrid-sharding";
 import { config } from "./config.js";  // 🔥 Now loads config directly
@@ -76,7 +76,6 @@ this.db = {
   afk: josh("afk"), // AFK status
   spotify: josh("spotify"), // Spotify user data
   likedSongs: josh("likedSongs"), // User liked songs
-  language: josh("language"), // User language preferences
   
   stats: {
     songsPlayed: josh("stats/songsPlayed"),  
@@ -126,21 +125,9 @@ this.db = {
     this.button = () => new ExtendedButtonBuilder();
     this.embed = (color) => new ExtendedEmbedBuilder(color || "#00ADB5");
 
-    // Translation helper - gets user's language and translates
-    this.t = async (userId, key, params = {}) => {
-      const userLang = await this.db.language.get(userId) || getDefaultLanguage();
-      return translate(userLang, key, params);
-    };
-
-    // Get user's language
-    this.getUserLanguage = async (userId) => {
-      return await this.db.language.get(userId) || getDefaultLanguage();
-    };
-
-    // Set user's language
-    this.setUserLanguage = async (userId, lang) => {
-      await this.db.language.set(userId, lang);
-      return lang;
+    // Translation helper - optimized for English only (no async DB lookup needed)
+    this.t = (key, params = {}) => {
+      return translate(key, params);
     };
 
     this.formatBytes = (bytes) => {

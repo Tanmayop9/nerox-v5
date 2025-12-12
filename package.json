@@ -17,7 +17,6 @@
     "dev": "npm run lint && npm run format && npm run build && npm run start"
   },
   "dependencies": {
-    "@iamtraction/google-translate": "^2.0.1",
     "@joshdb/core": "^1.2.7",
     "@joshdb/json": "^1.0.5",
     "@sapphire/ratelimits": "^2.4.9",

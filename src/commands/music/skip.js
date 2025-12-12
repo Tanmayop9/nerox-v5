@@ -11,7 +11,7 @@ export default class Skip extends Command {
             if (player.queue.length == 0 && !player.data.get('autoplayStatus')) {
                 await ctx.reply({
                     embeds: [
-                        client.embed().desc(`${client.emoji.cross} ${await client.t(ctx.author.id, 'queue.noMoreSongs')}`),
+                        client.embed().desc(`${client.emoji.cross} ${client.t('queue.noMoreSongs')}`),
                     ],
                 });
                 return;
@@ -19,7 +19,7 @@ export default class Skip extends Command {
             const skipTrack = player.queue.current;
             await player.shoukaku.stopTrack();
             await ctx.reply({
-                embeds: [client.embed().desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.skipped', { title: skipTrack.title })}`)],
+                embeds: [client.embed().desc(`${client.emoji.check} ${client.t('queue.skipped', { title: skipTrack.title })}`)],
             });
         };
     }

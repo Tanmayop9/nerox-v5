@@ -13,7 +13,7 @@ export default class Pause extends Command {
                     embeds: [
                         client
                             .embed()
-                            .desc(`${client.emoji.cross} ${await client.t(ctx.author.id, 'queue.alreadyPaused')}`),
+                            .desc(`${client.emoji.cross} ${client.t('queue.alreadyPaused')}`),
                     ],
                 });
                 return;
@@ -21,7 +21,7 @@ export default class Pause extends Command {
             player.pause(true);
             await updatePlayerButtons(client, player);
             await ctx.reply({
-                embeds: [client.embed().desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.paused')}`)],
+                embeds: [client.embed().desc(`${client.emoji.check} ${client.t('queue.paused')}`)],
             });
         };
     }

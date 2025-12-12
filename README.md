@@ -13,7 +13,6 @@ A feature-rich Discord music bot with premium features, support server managemen
 - 🔧 Customizable prefixes
 - 🚫 Blacklist and moderation tools
 - 📱 Web dashboard for database management
-- 🌐 Support for multiple languages
 - ⚙️ 24/7 music mode
 
 ## 📦 Installation

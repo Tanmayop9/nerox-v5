@@ -25,7 +25,7 @@ export default class Clear extends Command {
                 case 'queue':
                     player.queue.clear();
                     await ctx.reply({
-                        embeds: [client.embed().desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.cleared')}`)],
+                        embeds: [client.embed().desc(`${client.emoji.check} ${client.t('queue.cleared')}`)],
                     });
                     break;
                 case 'f':
@@ -35,14 +35,14 @@ export default class Clear extends Command {
                         embeds: [
                             client
                                 .embed()
-                                .desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.clearedFilters')}`),
+                                .desc(`${client.emoji.check} ${client.t('queue.clearedFilters')}`),
                         ],
                     })
                         .then(async (reply) => {
                         await player.shoukaku.clearFilters();
                         await client.sleep(3);
                         await reply.edit({
-                            embeds: [client.embed().desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.cleared')}`)],
+                            embeds: [client.embed().desc(`${client.emoji.check} ${client.t('queue.cleared')}`)],
                         });
                     });
                     break;
@@ -51,7 +51,7 @@ export default class Clear extends Command {
                         embeds: [
                             client
                                 .embed()
-                                .desc(`${client.emoji.cross} ${await client.t(ctx.author.id, 'errors.invalidArgs')}`),
+                                .desc(`${client.emoji.cross} ${client.t('errors.invalidArgs')}`),
                         ],
                     });
                     break;
