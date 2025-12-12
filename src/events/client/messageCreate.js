@@ -53,7 +53,7 @@ export default class MessageCreate {
 									.desc(
 										`${client.emoji.info} ${await client.t(message.author.id, 'afk.userAfk', { user: user.username })}\n\n` +
 										`${client.emoji.info1} ${await client.t(message.author.id, 'afk.reason', { reason: mentionedAfk.reason })}\n` +
-										`${client.emoji.info1} ${await client.t(message.author.id, 'afk.duration', { time: timeString })}`
+										`${client.emoji.info1} ${await client.t(message.author.id, 'afk.durationLabel', { time: timeString })}`
 									),
 							],
 						}).catch(() => {});

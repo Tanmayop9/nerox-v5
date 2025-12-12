@@ -35,7 +35,7 @@ export default class Clear extends Command {
                         embeds: [
                             client
                                 .embed()
-                                .desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'common.loading')}`),
+                                .desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.clearedFilters')}`),
                         ],
                     })
                         .then(async (reply) => {
