@@ -30,39 +30,39 @@ export default class Help extends Command {
 
 		const embed = client.embed('#2B2D31')
 			.setAuthor({ 
-				name: `${client.user.username} - Help`,
+				name: `${client.user.username} - ${await client.t(ctx.author.id, 'help.title')}`,
 				iconURL: client.user.displayAvatarURL()
 			})
 			.desc(
-				`Prefix: \`${client.prefix}\`\n` +
-				`Commands: \`${totalCommands}\` across \`${categories.length}\` categories\n\n` +
-				`Use \`${client.prefix}<command> -guide\` for command details\n` +
-				`\`<>\` = required | \`[]\` = optional`
+				`${await client.t(ctx.author.id, 'help.prefix')}: \`${client.prefix}\`\n` +
+				`${await client.t(ctx.author.id, 'help.commands')}: \`${totalCommands}\` across \`${categories.length}\` ${await client.t(ctx.author.id, 'help.categories')}\n\n` +
+				`${await client.t(ctx.author.id, 'help.useGuide', { prefix: client.prefix })}\n` +
+				`${await client.t(ctx.author.id, 'help.requireOptional')}`
 			)
 			.footer({ 
-				text: `${client.guilds.cache.size} servers`,
+				text: await client.t(ctx.author.id, 'help.serversCount', { count: client.guilds.cache.size }),
 				iconURL: ctx.author.displayAvatarURL()
 			});
 
 		const menu = new StringSelectMenuBuilder()
 			.setCustomId('menu')
-			.setPlaceholder('Select a category')
+			.setPlaceholder(await client.t(ctx.author.id, 'help.selectCategory'))
 			.setMaxValues(1)
 			.addOptions([
 				{
-					label: 'Home',
+					label: await client.t(ctx.author.id, 'help.home'),
 					value: 'home',
-					description: 'Main menu',
+					description: await client.t(ctx.author.id, 'help.homeDesc'),
 				},
 				...categories.map(category => ({
 					label: category.charAt(0).toUpperCase() + category.slice(1),
 					value: category,
-					description: `${allCommands[category]?.length || 0} commands`,
+					description: `${allCommands[category]?.length || 0} ${await client.t(ctx.author.id, 'help.commands').toLowerCase()}`,
 				})),
 				{
-					label: 'All Commands',
+					label: await client.t(ctx.author.id, 'help.allCommands'),
 					value: 'all',
-					description: 'View all commands',
+					description: await client.t(ctx.author.id, 'help.allCommandsDesc'),
 				},
 			]);
 
@@ -88,7 +88,7 @@ export default class Help extends Command {
 				case 'all':
 					const allEmbed = client.embed('#2B2D31')
 						.setAuthor({ 
-							name: `${client.user.username} - All Commands`,
+							name: `${client.user.username} - ${await client.t(ctx.author.id, 'help.allCommands')}`,
 							iconURL: client.user.displayAvatarURL()
 						})
 						.desc(
@@ -100,7 +100,7 @@ export default class Help extends Command {
 								).join('\n\n')
 						)
 						.footer({ 
-							text: `Total: ${totalCommands} commands`,
+							text: await client.t(ctx.author.id, 'help.totalCommands', { count: totalCommands }),
 							iconURL: ctx.author.displayAvatarURL()
 						});
 					await reply.edit({ embeds: [allEmbed] });
@@ -118,10 +118,10 @@ export default class Help extends Command {
 								? selectedCommands.map(cmd =>
 									`\`${client.prefix}${cmd.name}\` - ${cmd.description}`
 								  ).join('\n')
-								: 'No commands available'
+								: await client.t(ctx.author.id, 'help.noCommands')
 						)
 						.footer({ 
-							text: `${selectedCommands.length} commands`,
+							text: `${selectedCommands.length} ${await client.t(ctx.author.id, 'help.commands').toLowerCase()}`,
 							iconURL: ctx.author.displayAvatarURL()
 						});
 

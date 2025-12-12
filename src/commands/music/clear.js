@@ -25,7 +25,7 @@ export default class Clear extends Command {
                 case 'queue':
                     player.queue.clear();
                     await ctx.reply({
-                        embeds: [client.embed().desc(`${client.emoji.check} Queue cleared successfully.`)],
+                        embeds: [client.embed().desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.cleared')}`)],
                     });
                     break;
                 case 'f':
@@ -35,14 +35,14 @@ export default class Clear extends Command {
                         embeds: [
                             client
                                 .embed()
-                                .desc(`${client.emoji.check} Please wait while I clear all applied filters.`),
+                                .desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.clearedFilters')}`),
                         ],
                     })
                         .then(async (reply) => {
                         await player.shoukaku.clearFilters();
                         await client.sleep(3);
                         await reply.edit({
-                            embeds: [client.embed().desc(`${client.emoji.check} Filters cleared successfully.`)],
+                            embeds: [client.embed().desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.cleared')}`)],
                         });
                     });
                     break;
@@ -51,7 +51,7 @@ export default class Clear extends Command {
                         embeds: [
                             client
                                 .embed()
-                                .desc(`${client.emoji.cross} Please provide a valid option \`q\` or \`f\` or \`queue\` or \`filters\`.`),
+                                .desc(`${client.emoji.cross} ${await client.t(ctx.author.id, 'errors.invalidArgs')}`),
                         ],
                     });
                     break;

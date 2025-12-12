@@ -11,7 +11,7 @@ export default class Stop extends Command {
                 embeds: [
                     client
                         .embed()
-                        .desc(`${client.emoji.check} Stopped and destroyed the player.\n` +
+                        .desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.stopped')}\n` +
                         ((await client.db?.twoFourSeven.has(ctx.guild.id)) ?
                             `${client.emoji.info} Disable 247 to prevent the bot from joining back.`
                             : ``)),

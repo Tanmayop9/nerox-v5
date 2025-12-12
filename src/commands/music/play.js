@@ -19,7 +19,7 @@ export default class Play extends Command {
         this.execute = async (client, ctx, args) => {
             if (!args.length) {
                 await ctx.reply({
-                    embeds: [client.embed().desc(`${client.emoji.cross} Please provide a query.`)],
+                    embeds: [client.embed().desc(`${client.emoji.cross} ${await client.t(ctx.author.id, 'play.provideQuery')}`)],
                 });
                 return;
             }
@@ -35,7 +35,7 @@ export default class Play extends Command {
                 embeds: [
                     client
                         .embed()
-                        .desc(`${client.emoji.timer} Please wait while I search for relevant tracks.`),
+                        .desc(`${client.emoji.timer} ${await client.t(ctx.author.id, 'play.searching')}`),
                 ],
             });
             const result = await player.search(args.join(' '), {
@@ -43,7 +43,7 @@ export default class Play extends Command {
             });
             if (!result.tracks.length) {
                 await waitEmbed.edit({
-                    embeds: [client.embed().desc(`${client.emoji.cross} No results found.`)],
+                    embeds: [client.embed().desc(`${client.emoji.cross} ${await client.t(ctx.author.id, 'play.noResults')}`)],
                 });
                 return;
             }
@@ -60,7 +60,7 @@ export default class Play extends Command {
                         embeds: [
                             client
                                 .embed()
-                                .desc(`${client.emoji.cross} Song/(s) of duration less than 30s cannot be played.`),
+                                .desc(`${client.emoji.cross} ${await client.t(ctx.author.id, 'play.tooShort')}`),
                         ],
                     });
                     return;
@@ -68,8 +68,8 @@ export default class Play extends Command {
                 player.queue.add(tracks[0]);
             }
             const description = result.type === 'PLAYLIST' ?
-                `${client.emoji.check} Added \`${tracks.length}\` from \`${result.playlistName}\` to queue.`
-                : `${client.emoji.check} Added  \`${tracks[0].title}\` to queue.`;
+                `${client.emoji.check} ${await client.t(ctx.author.id, 'play.addedPlaylist', { count: tracks.length, name: result.playlistName })}`
+                : `${client.emoji.check} ${await client.t(ctx.author.id, 'play.addedTrack', { title: tracks[0].title })}`;
             if (!player.playing && !player.paused)
                 player.play();
             await waitEmbed.edit({

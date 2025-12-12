@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "@iamtraction/google-translate": "^2.0.1",
+    "@joshdb/core": "^1.2.7",
+    "@joshdb/json": "^1.0.5",
     "@sapphire/ratelimits": "^2.4.9",
     "@types/xml2js": "^0.4.14",
     "archiver": "^7.0.1",
@@ -42,7 +44,6 @@
     "moment": "^2.30.1",
     "moment-duration-format": "^2.3.2",
     "moment-timezone": "^0.5.45",
-    "mongoose": "^8.13.2",
     "musicard-bun": "^1.6.8",
     "neofetch": "^7.1.0",
     "node-fetch": "^3.3.2",
