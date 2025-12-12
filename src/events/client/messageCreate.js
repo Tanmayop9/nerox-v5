@@ -19,7 +19,7 @@ export default class MessageCreate {
 				await client.db.afk.delete(message.author.id);
 				const duration = moment.duration(Date.now() - afkData.timestamp);
 				const timeString = duration.asMinutes() < 1 
-					? 'less than a minute'
+					? await client.t(message.author.id, 'afk.lessThanMinute')
 					: duration.format('d[d] h[h] m[m]', { trim: 'all' });
 				
 				await message.reply({
@@ -27,8 +27,8 @@ export default class MessageCreate {
 						client
 							.embed()
 							.desc(
-								`${client.emoji.check} **Welcome back, ${message.author.username}!**\n\n` +
-								`${client.emoji.info} You were AFK for **${timeString}**`
+								`${client.emoji.check} **${await client.t(message.author.id, 'afk.welcomeBack', { user: message.author.username })}**\n\n` +
+								`${client.emoji.info} ${await client.t(message.author.id, 'afk.wasAfkFor', { time: timeString })}`
 							),
 					],
 				}).catch(() => {});
@@ -43,7 +43,7 @@ export default class MessageCreate {
 					if (mentionedAfk) {
 						const duration = moment.duration(Date.now() - mentionedAfk.timestamp);
 						const timeString = duration.asMinutes() < 1 
-							? 'less than a minute'
+							? await client.t(message.author.id, 'afk.lessThanMinute')
 							: duration.format('d[d] h[h] m[m]', { trim: 'all' });
 						
 						await message.reply({
@@ -51,9 +51,9 @@ export default class MessageCreate {
 								client
 									.embed()
 									.desc(
-										`${client.emoji.info} **${user.username}** is currently AFK\n\n` +
-										`${client.emoji.info1} **Reason:** ${mentionedAfk.reason}\n` +
-										`${client.emoji.info1} **Duration:** ${timeString}`
+										`${client.emoji.info} ${await client.t(message.author.id, 'afk.userAfk', { user: user.username })}\n\n` +
+										`${client.emoji.info1} ${await client.t(message.author.id, 'afk.reason', { reason: mentionedAfk.reason })}\n` +
+										`${client.emoji.info1} ${await client.t(message.author.id, 'afk.duration', { time: timeString })}`
 									),
 							],
 						}).catch(() => {});

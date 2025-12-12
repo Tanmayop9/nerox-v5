@@ -16,7 +16,7 @@ export default class Ping extends Command {
   execute = async (client, ctx) => {
     const msg = await ctx.reply({ 
       embeds: [
-        client.desc(`Checking latency...`)
+        client.desc(await client.t(ctx.author.id, 'ping.checking'))
       ]
     });
 
@@ -31,16 +31,16 @@ export default class Ping extends Command {
 
     const embed = client.embed('#2B2D31')
       .setAuthor({
-        name: `${client.user.username} - Latency`,
+        name: `${client.user.username} - ${await client.t(ctx.author.id, 'ping.title')}`,
         iconURL: client.user.displayAvatarURL()
       })
       .desc(
-        `**WebSocket:** ${wsLatency}ms\n` +
-        `**Database:** ${dbLatency}ms\n` +
-        `**Message:** ${msgLatency}ms`
+        `**${await client.t(ctx.author.id, 'ping.websocket')}:** ${wsLatency}ms\n` +
+        `**${await client.t(ctx.author.id, 'ping.database')}:** ${dbLatency}ms\n` +
+        `**${await client.t(ctx.author.id, 'ping.message')}:** ${msgLatency}ms`
       )
       .footer({ 
-        text: `Requested by ${ctx.author.username}`,
+        text: await client.t(ctx.author.id, 'ping.requestedBy', { user: ctx.author.username }),
         iconURL: ctx.author.displayAvatarURL()
       });
 
