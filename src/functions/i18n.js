@@ -40,16 +40,20 @@ export function translate(lang, key, params = {}) {
         if (value && typeof value === 'object') {
             value = value[k];
         } else {
-            // Fallback to default language if key not found
-            value = languages[defaultLanguage];
-            for (const k2 of keys) {
-                if (value && typeof value === 'object') {
-                    value = value[k2];
-                } else {
-                    return key; // Return key itself if not found
-                }
-            }
+            value = undefined;
             break;
+        }
+    }
+    
+    // Fallback to default language if key not found
+    if (value === undefined && lang !== defaultLanguage) {
+        value = languages[defaultLanguage];
+        for (const k of keys) {
+            if (value && typeof value === 'object') {
+                value = value[k];
+            } else {
+                return key; // Return key itself if not found even in default
+            }
         }
     }
     
