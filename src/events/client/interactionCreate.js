@@ -21,7 +21,7 @@ export default class InteractionCreate {
                 if (!panel) {
                     return interaction.reply({
                         ephemeral: true,
-                        content: await client.t(userId, 'ticket.panelDeleted')
+                        content: client.t('ticket.panelDeleted')
                     });
                 }
 
@@ -34,7 +34,7 @@ export default class InteractionCreate {
                 if (existing) {
                     return interaction.reply({
                         ephemeral: true,
-                        content: await client.t(userId, 'ticket.alreadyExists', { id: existing.id })
+                        content: client.t('ticket.alreadyExists', { id: existing.id })
                     });
                 }
 
@@ -59,13 +59,13 @@ export default class InteractionCreate {
 
                 await interaction.reply({
                     ephemeral: true,
-                    content: await client.t(userId, 'ticket.created', { id: channel.id })
+                    content: client.t('ticket.created', { id: channel.id })
                 });
 
                 const embed = client.embed()
-                    .title(await client.t(userId, 'ticket.title'))
-                    .desc(await client.t(userId, 'ticket.welcome', { user: interaction.user.toString() }))
-                    .footer({ text: await client.t(userId, 'ticket.closeFooter') });
+                    .title(client.t('ticket.title'))
+                    .desc(client.t('ticket.welcome', { user: interaction.user.toString() }))
+                    .footer({ text: client.t('ticket.closeFooter') });
 
                 await channel.send({
                     content: panel.pingRole ? `<@&${panel.pingRole}>` : null,

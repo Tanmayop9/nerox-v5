@@ -30,39 +30,39 @@ export default class Help extends Command {
 
 		const embed = client.embed('#2B2D31')
 			.setAuthor({ 
-				name: `${client.user.username} - ${await client.t(ctx.author.id, 'help.title')}`,
+				name: `${client.user.username} - ${client.t('help.title')}`,
 				iconURL: client.user.displayAvatarURL()
 			})
 			.desc(
-				`${await client.t(ctx.author.id, 'help.prefix')}: \`${client.prefix}\`\n` +
-				`${await client.t(ctx.author.id, 'help.commands')}: \`${totalCommands}\` across \`${categories.length}\` ${await client.t(ctx.author.id, 'help.categories')}\n\n` +
-				`${await client.t(ctx.author.id, 'help.useGuide', { prefix: client.prefix })}\n` +
-				`${await client.t(ctx.author.id, 'help.requireOptional')}`
+				`${client.t('help.prefix')}: \`${client.prefix}\`\n` +
+				`${client.t('help.commands')}: \`${totalCommands}\` across \`${categories.length}\` ${client.t('help.categories')}\n\n` +
+				`${client.t('help.useGuide', { prefix: client.prefix })}\n` +
+				`${client.t('help.requireOptional')}`
 			)
 			.footer({ 
-				text: await client.t(ctx.author.id, 'help.serversCount', { count: client.guilds.cache.size }),
+				text: client.t('help.serversCount', { count: client.guilds.cache.size }),
 				iconURL: ctx.author.displayAvatarURL()
 			});
 
 		const menu = new StringSelectMenuBuilder()
 			.setCustomId('menu')
-			.setPlaceholder(await client.t(ctx.author.id, 'help.selectCategory'))
+			.setPlaceholder(client.t('help.selectCategory'))
 			.setMaxValues(1)
 			.addOptions([
 				{
-					label: await client.t(ctx.author.id, 'help.home'),
+					label: client.t('help.home'),
 					value: 'home',
-					description: await client.t(ctx.author.id, 'help.homeDesc'),
+					description: client.t('help.homeDesc'),
 				},
 				...categories.map(category => ({
 					label: category.charAt(0).toUpperCase() + category.slice(1),
 					value: category,
-					description: `${allCommands[category]?.length || 0} ${await client.t(ctx.author.id, 'help.commands').toLowerCase()}`,
+					description: `${allCommands[category]?.length || 0} ${client.t('help.commands').toLowerCase()}`,
 				})),
 				{
-					label: await client.t(ctx.author.id, 'help.allCommands'),
+					label: client.t('help.allCommands'),
 					value: 'all',
-					description: await client.t(ctx.author.id, 'help.allCommandsDesc'),
+					description: client.t('help.allCommandsDesc'),
 				},
 			]);
 
@@ -88,7 +88,7 @@ export default class Help extends Command {
 				case 'all':
 					const allEmbed = client.embed('#2B2D31')
 						.setAuthor({ 
-							name: `${client.user.username} - ${await client.t(ctx.author.id, 'help.allCommands')}`,
+							name: `${client.user.username} - ${client.t('help.allCommands')}`,
 							iconURL: client.user.displayAvatarURL()
 						})
 						.desc(
@@ -100,7 +100,7 @@ export default class Help extends Command {
 								).join('\n\n')
 						)
 						.footer({ 
-							text: await client.t(ctx.author.id, 'help.totalCommands', { count: totalCommands }),
+							text: client.t('help.totalCommands', { count: totalCommands }),
 							iconURL: ctx.author.displayAvatarURL()
 						});
 					await reply.edit({ embeds: [allEmbed] });
@@ -118,10 +118,10 @@ export default class Help extends Command {
 								? selectedCommands.map(cmd =>
 									`\`${client.prefix}${cmd.name}\` - ${cmd.description}`
 								  ).join('\n')
-								: await client.t(ctx.author.id, 'help.noCommands')
+								: client.t('help.noCommands')
 						)
 						.footer({ 
-							text: `${selectedCommands.length} ${await client.t(ctx.author.id, 'help.commands').toLowerCase()}`,
+							text: `${selectedCommands.length} ${client.t('help.commands').toLowerCase()}`,
 							iconURL: ctx.author.displayAvatarURL()
 						});
 

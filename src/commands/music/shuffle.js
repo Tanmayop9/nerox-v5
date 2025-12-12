@@ -14,7 +14,7 @@ export default class Shuffle extends Command {
         this.execute = async (client, ctx) => {
             client.getPlayer(ctx).queue.shuffle();
             await ctx.reply({
-                embeds: [client.embed().desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.shuffled')}`)],
+                embeds: [client.embed().desc(`${client.emoji.check} ${client.t('queue.shuffled')}`)],
             });
         };
     }

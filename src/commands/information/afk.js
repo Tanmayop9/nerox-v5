@@ -16,7 +16,7 @@ export default class Afk extends Command {
     }
 
     execute = async (client, ctx, args) => {
-        const reason = args.join(' ') || await client.t(ctx.author.id, 'afk.defaultReason');
+        const reason = args.join(' ') || client.t('afk.defaultReason');
         const afkData = {
             reason: reason,
             timestamp: Date.now(),
@@ -29,9 +29,9 @@ export default class Afk extends Command {
                 client
                     .embed()
                     .desc(
-                        `${client.emoji.check} **${await client.t(ctx.author.id, 'afk.activated')}**\n\n` +
-                        `${client.emoji.info} ${await client.t(ctx.author.id, 'afk.reason', { reason: reason })}\n` +
-                        `${client.emoji.info} ${await client.t(ctx.author.id, 'afk.notifyOthers')}`
+                        `${client.emoji.check} **${client.t('afk.activated')}**\n\n` +
+                        `${client.emoji.info} ${client.t('afk.reason', { reason: reason })}\n` +
+                        `${client.emoji.info} ${client.t('afk.notifyOthers')}`
                     ),
             ],
         });

@@ -13,7 +13,7 @@ export default class Resume extends Command {
                     embeds: [
                         client
                             .embed()
-                            .desc(`${client.emoji.cross} ${await client.t(ctx.author.id, 'queue.alreadyPlaying')}`),
+                            .desc(`${client.emoji.cross} ${client.t('queue.alreadyPlaying')}`),
                     ],
                 });
                 return;
@@ -21,7 +21,7 @@ export default class Resume extends Command {
             player.pause(false);
             await updatePlayerButtons(client, player);
             await ctx.reply({
-                embeds: [client.embed().desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.resumed')}`)],
+                embeds: [client.embed().desc(`${client.emoji.check} ${client.t('queue.resumed')}`)],
             });
         };
     }
