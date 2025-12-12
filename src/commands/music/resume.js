@@ -13,7 +13,7 @@ export default class Resume extends Command {
                     embeds: [
                         client
                             .embed()
-                            .desc(`${client.emoji.cross} There currently is no paused player in this guild.`),
+                            .desc(`${client.emoji.cross} ${await client.t(ctx.author.id, 'queue.alreadyPlaying')}`),
                     ],
                 });
                 return;
@@ -21,7 +21,7 @@ export default class Resume extends Command {
             player.pause(false);
             await updatePlayerButtons(client, player);
             await ctx.reply({
-                embeds: [client.embed().desc(`${client.emoji.check} Resumed the player.`)],
+                embeds: [client.embed().desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.resumed')}`)],
             });
         };
     }
