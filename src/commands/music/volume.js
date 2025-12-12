@@ -27,7 +27,7 @@ export default class Volume extends Command {
                     embeds: [
                         client
                             .embed()
-                            .desc(`${client.emoji.cross} Volume must be greater than \`0\` and lesser than \`150\`.`),
+                            .desc(`${client.emoji.cross} ${await client.t(ctx.author.id, 'queue.volumeInvalid')}`),
                     ],
                 });
                 return;
@@ -35,7 +35,7 @@ export default class Volume extends Command {
             player.setVolume(volume);
             await ctx.reply({
                 embeds: [
-                    client.embed().desc(`${client.emoji.check} Current volume for player is \`${volume}%\`.`),
+                    client.embed().desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'queue.volumeSet', { volume: volume })}`),
                 ],
             });
         };

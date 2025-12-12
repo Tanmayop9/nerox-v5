@@ -12,7 +12,7 @@ export default class Leave extends Command {
                 embeds: [
                     client
                         .embed()
-                        .desc(`${client.emoji.check} Destroyed and disconnected the player.\n` +
+                        .desc(`${client.emoji.check} ${await client.t(ctx.author.id, 'voice.left')}\n` +
                         ((await client.db?.twoFourSeven.has(ctx.guild.id)) ?
                             `${client.emoji.info} Disable 247 to prevent the bot from joining back.`
                             : ``)),
