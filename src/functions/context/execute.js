@@ -15,7 +15,40 @@ export const execute = async (ctx, command, args) => {
             return;
         }
 
-        await command.execute(client, ctx, args);
+        // 🚀 Ultra Advanced: Rate limiting check
+        const rateCheck = await client.rateLimiter.check(client, ctx.author.id, 'command');
+        if (rateCheck.limited) {
+            return ctx.reply({
+                embeds: [
+                    client.embed('#FF6B6B')
+                        .desc(
+                            `${client.emoji.cross} **Rate Limit Exceeded**\n\n` +
+                            `You're sending commands too fast! Please slow down.\n` +
+                            `Try again in **${Math.ceil(rateCheck.resetIn / 1000)}s**\n\n` +
+                            `Your tier: \`${rateCheck.tier.toUpperCase()}\` (${rateCheck.limit} commands per 10s)`
+                        )
+                ]
+            }).catch(() => {});
+        }
+
+        // 🚀 Ultra Advanced: Performance monitoring
+        const endTiming = client.performanceMonitor.startTiming(`command:${command.name}`);
+        const startTime = Date.now();
+        let success = true;
+
+        try {
+            await command.execute(client, ctx, args);
+        } catch (error) {
+            success = false;
+            client.performanceMonitor.recordError('command', error);
+            throw error;
+        } finally {
+            const duration = endTiming();
+            client.performanceMonitor.recordCommand(command.name, duration, success);
+            
+            // 🚀 Ultra Advanced: Track analytics
+            client.analytics.trackCommand(ctx.author.id, ctx.guild.id, command.name);
+        }
 
         const date = moment().tz('Asia/Kolkata').format('DD-MM-YYYY');
 

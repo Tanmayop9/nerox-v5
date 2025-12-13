@@ -45,11 +45,21 @@ export class Manager {
         ], {
             userAgent: `@painfuego/fuego/v1.0.0/21_N-2K021-ST`,
         });
-        manager.on('playerStuck', async (player) => await player.destroy());
-        manager.on('playerException', async (player) => await player.destroy());
+        // 🚀 Ultra Advanced: Enhanced error handling with performance monitoring
+        manager.on('playerStuck', async (player) => {
+            client.performanceMonitor.recordError('lavalink', new Error('Player stuck'));
+            await player.destroy();
+        });
+        manager.on('playerException', async (player, error) => {
+            client.performanceMonitor.recordError('lavalink', error || new Error('Player exception'));
+            await player.destroy();
+        });
         manager.on('playerStart', (...args) => client.emit('trackStart', ...args));
         manager.on('playerDestroy', (...args) => client.emit('playerDestroy', ...args));
-        manager.shoukaku.on('error', (_, error) => client.log(JSON.stringify(error), 'error'));
+        manager.shoukaku.on('error', (_, error) => {
+            client.performanceMonitor.recordError('lavalink', error);
+            client.log(JSON.stringify(error), 'error');
+        });
         manager.shoukaku.on('ready', (name) => client.log(`Node : ${name} connected`, 'success'));
         // track end
         manager.on('playerEnd', async (player) => await player.data.get('playEmbed')?.delete());

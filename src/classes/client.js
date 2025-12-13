@@ -23,6 +23,8 @@ import { PerformanceMonitor } from "../utils/performanceMonitor.js";
 import { AdvancedRateLimiter } from "../utils/advancedRateLimiter.js";
 import { HealthCheck, defaultHealthChecks } from "../utils/healthCheck.js";
 import { GracefulShutdown, defaultShutdownHandlers } from "../utils/gracefulShutdown.js";
+import { Analytics } from "../utils/analytics.js";
+import { AdvancedLogger } from "../utils/advancedLogger.js";
 
 format(moment);
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -94,6 +96,13 @@ export class ExtendedClient extends Client {
     this.shutdownHandler = new GracefulShutdown(this, { timeout: 30000 });
     Object.entries(defaultShutdownHandlers).forEach(([name, handler]) => {
       this.shutdownHandler.register(name, handler);
+    });
+
+    // Analytics and advanced logging
+    this.analytics = new Analytics(this);
+    this.advancedLogger = new AdvancedLogger({ 
+      logDir: './logs',
+      logLevel: process.env.LOG_LEVEL || 'info',
     });
 
     // Start cleanup intervals
