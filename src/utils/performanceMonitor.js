@@ -101,8 +101,10 @@ export class PerformanceMonitor {
         return () => {
             const duration = Date.now() - start;
             this.timings.push({ label, duration, timestamp: Date.now() });
-            // Clean old timings
-            this.cleanTimings();
+            // Clean old timings periodically (not on every call for performance)
+            if (this.timings.length % 100 === 0) {
+                this.cleanTimings();
+            }
             return duration;
         };
     }

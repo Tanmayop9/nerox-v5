@@ -2,6 +2,10 @@
  * Batch Processor for Database Operations
  * Groups multiple operations together for efficiency
  * @author NeroX Ultra Advanced System
+ * 
+ * NOTE: This is a framework for future database operation batching.
+ * Currently provides the structure but requires integration with
+ * the actual database layer (JoshDB/MongoDB) for full functionality.
  */
 
 export class BatchProcessor {

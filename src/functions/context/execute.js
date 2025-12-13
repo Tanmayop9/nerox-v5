@@ -46,8 +46,14 @@ export const execute = async (ctx, command, args) => {
             const duration = endTiming();
             client.performanceMonitor.recordCommand(command.name, duration, success);
             
-            // 🚀 Ultra Advanced: Track analytics
-            client.analytics.trackCommand(ctx.author.id, ctx.guild.id, command.name);
+            // 🚀 Ultra Advanced: Track analytics (async fire-and-forget)
+            setImmediate(() => {
+                try {
+                    client.analytics.trackCommand(ctx.author.id, ctx.guild.id, command.name);
+                } catch (e) {
+                    // Silently fail analytics to not impact command execution
+                }
+            });
         }
 
         const date = moment().tz('Asia/Kolkata').format('DD-MM-YYYY');

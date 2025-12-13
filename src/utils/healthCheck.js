@@ -145,7 +145,8 @@ export const defaultHealthChecks = {
      */
     memory: async (client) => {
         const usage = process.memoryUsage();
-        const heapLimit = require('v8').getHeapStatistics().heap_size_limit;
+        const { default: v8 } = await import('v8');
+        const heapLimit = v8.getHeapStatistics().heap_size_limit;
         return (usage.heapUsed / heapLimit) < 0.9; // Under 90%
     },
 
