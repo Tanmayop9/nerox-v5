@@ -1,9 +1,10 @@
 # NeroX v5 🎵
 
-A feature-rich Discord music bot with premium features, support server management, and web dashboard.
+A feature-rich Discord music bot with **ultra-advanced** enterprise-grade features, premium capabilities, and comprehensive monitoring.
 
 ## 🚀 Features
 
+### Core Features
 - 🎵 High-quality music playback with multiple sources (Spotify, Apple Music, Deezer)
 - 💎 Premium features for users and servers
 - 🎫 Ticket system for support servers
@@ -14,6 +15,19 @@ A feature-rich Discord music bot with premium features, support server managemen
 - 🚫 Blacklist and moderation tools
 - 📱 Web dashboard for database management
 - ⚙️ 24/7 music mode
+
+### 🚀 Ultra-Advanced Features
+- **Advanced Caching System**: LRU cache with TTL for optimal performance
+- **Circuit Breakers**: Prevents cascading failures in external services
+- **Request Queue**: Manages concurrent operations with priority support
+- **Retry Handler**: Exponential backoff for resilient operations
+- **Performance Monitoring**: Real-time metrics and insights
+- **Advanced Rate Limiting**: Tiered limits (default/premium/owner)
+- **Health Check System**: HTTP endpoints for monitoring (port 3000)
+- **Graceful Shutdown**: Ensures clean shutdown of all services
+- **Analytics System**: Usage patterns and insights
+- **Advanced Logging**: Log rotation and structured logging
+- **Command Metrics**: Track performance and usage statistics
 
 ## 📦 Installation
 
@@ -122,6 +136,39 @@ Default admin credentials:
 
 **⚠️ Change these credentials in production!**
 
+## 🔍 Monitoring & Health Checks
+
+### Health Check Endpoints
+
+The bot provides HTTP health check endpoints on port 3000 (configurable via `HEALTH_PORT` env variable):
+
+- **`/health`** - Overall health status with component checks
+- **`/metrics`** - Detailed performance metrics
+- **`/stats`** - System statistics (cache, queue, circuit breakers)
+
+Example:
+```bash
+curl http://localhost:3000/health
+curl http://localhost:3000/metrics
+curl http://localhost:3000/stats
+```
+
+### Owner Commands for Monitoring
+
+- **`metrics`** - View ultra-advanced system metrics
+  - Subcommands: `cache`, `queue`, `circuit`, `performance`, `health`, `commands`, `slow`
+  
+- **`analytics`** - View usage analytics and insights
+  - Subcommands: `summary`, `peak`, `users`, `guilds`, `user`, `guild`, `session`
+
+Example usage:
+```
+&metrics cache         # View cache statistics
+&metrics performance   # View performance metrics
+&analytics summary     # View analytics summary
+&analytics peak        # View peak usage hours
+```
+
 ## 🏗️ Project Structure
 
 ```
@@ -150,6 +197,7 @@ nerox-v5/
 
 ## 🛠️ Technologies
 
+### Core Technologies
 - **Discord.js v14** - Discord bot framework
 - **MongoDB & Mongoose** - Database and ODM
 - **Express** - Web server for dashboard
@@ -157,6 +205,18 @@ nerox-v5/
 - **Shoukaku** - Lavalink wrapper
 - **Discord Hybrid Sharding** - Sharding support
 - **EJS** - Templating engine
+
+### Ultra-Advanced Systems
+- **Advanced Caching** - LRU cache with TTL and statistics
+- **Circuit Breakers** - Fault tolerance for external services
+- **Request Queue** - Priority-based operation management
+- **Retry Handler** - Exponential backoff with jitter
+- **Performance Monitor** - Real-time metrics collection
+- **Advanced Rate Limiter** - Tiered rate limiting system
+- **Health Checks** - HTTP-based health monitoring
+- **Graceful Shutdown** - Clean service termination
+- **Analytics Engine** - Usage pattern tracking
+- **Advanced Logger** - Structured logging with rotation
 
 ## 🔧 Development
 
@@ -219,6 +279,16 @@ npm run dev  # Lint, format, build, and start
 - `serverpremium` - Manage premium servers
 - `mod` - Bot moderator management
 - `blacklist` - User blacklist
+
+### Ultra-Advanced (Owner Only)
+- `metrics` - View system performance metrics
+  - Cache statistics, queue stats, circuit breakers
+  - Performance data, health checks, command metrics
+  - Slow operation detection
+- `analytics` - View usage analytics
+  - User and guild insights
+  - Peak usage hours, session statistics
+  - Command patterns and trends
 
 ## 🤝 Contributing
 
