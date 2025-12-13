@@ -186,6 +186,11 @@ export const readyEvent = async (client) => {
     // Initialize automatic daily backup
     await initAutoBackup(client);
 
+    // 🚀 Start Ultra Advanced Systems
+    client.healthCheck.start();
+    client.shutdownHandler.init();
+    client.log('Ultra Advanced Systems initialized - Health check, graceful shutdown, performance monitoring active.', 'success');
+
     // 24/7 Player Load
     const node = [...client.manager.shoukaku.nodes][0][1];
     if (node.state === 2) return await load247Players(client);

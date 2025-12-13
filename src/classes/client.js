@@ -15,6 +15,16 @@ import { translate } from "../functions/i18n.js";
 import { Client, Partials, Collection, GatewayIntentBits, WebhookClient } from "discord.js";
 import { ClusterClient, getInfo } from "discord-hybrid-sharding";
 import { config } from "./config.js";  // 🔥 Now loads config directly
+import { AdvancedCache } from "../utils/advancedCache.js";
+import { CircuitBreaker } from "../utils/circuitBreaker.js";
+import { RequestQueue } from "../utils/requestQueue.js";
+import { RetryHandler } from "../utils/retryHandler.js";
+import { PerformanceMonitor } from "../utils/performanceMonitor.js";
+import { AdvancedRateLimiter } from "../utils/advancedRateLimiter.js";
+import { HealthCheck, defaultHealthChecks } from "../utils/healthCheck.js";
+import { GracefulShutdown, defaultShutdownHandlers } from "../utils/gracefulShutdown.js";
+import { Analytics } from "../utils/analytics.js";
+import { AdvancedLogger } from "../utils/advancedLogger.js";
 
 format(moment);
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -58,6 +68,46 @@ export class ExtendedClient extends Client {
     this.prefix = config.prefix || "&";
     this.owners = config.owners;
     this.admins = config.admins;
+
+    // 🚀 Ultra Advanced Systems
+    this.cache = new AdvancedCache({ maxSize: 5000, defaultTTL: 300000 }); // 5 min TTL
+    this.circuitBreakers = {
+      database: new CircuitBreaker({ failureThreshold: 5, timeout: 60000 }),
+      lavalink: new CircuitBreaker({ failureThreshold: 3, timeout: 30000 }),
+      api: new CircuitBreaker({ failureThreshold: 5, timeout: 60000 }),
+    };
+    this.requestQueue = new RequestQueue({ concurrency: 50, timeout: 30000 });
+    this.retryHandler = new RetryHandler({ maxRetries: 3, baseDelay: 1000 });
+    this.performanceMonitor = new PerformanceMonitor({ metricsWindow: 300000 }); // 5 min
+    this.rateLimiter = new AdvancedRateLimiter({
+      defaultRequests: 5,
+      premiumRequests: 15,
+      ownerRequests: 100,
+      defaultWindow: 10000,
+    });
+
+    // Health check system
+    this.healthCheck = new HealthCheck(this, { port: process.env.HEALTH_PORT || 3000 });
+    Object.entries(defaultHealthChecks).forEach(([name, check]) => {
+      this.healthCheck.register(name, check);
+    });
+
+    // Graceful shutdown handler
+    this.shutdownHandler = new GracefulShutdown(this, { timeout: 30000 });
+    Object.entries(defaultShutdownHandlers).forEach(([name, handler]) => {
+      this.shutdownHandler.register(name, handler);
+    });
+
+    // Analytics and advanced logging
+    this.analytics = new Analytics(this);
+    this.advancedLogger = new AdvancedLogger({ 
+      logDir: './logs',
+      logLevel: process.env.LOG_LEVEL || 'info',
+    });
+
+    // Start cleanup intervals
+    setInterval(() => this.cache.cleanup(), 60000); // Every minute
+    setInterval(() => this.rateLimiter.cleanup(), 120000); // Every 2 minutes
 
 this.db = {
   noPrefix: josh("noPrefix"),
